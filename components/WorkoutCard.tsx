@@ -1,11 +1,12 @@
 import { colors } from '@/assets/colors';
 import { Workout } from '@/interfaces/interfaces';
+import { durationHHMMSS, timeHHMM } from '@/services/timeConverter';
 import { Link } from 'expo-router';
 import React from 'react';
 import { Alert, Text, TouchableOpacity, View } from 'react-native';
 
 const WorkoutCard = ({ workout, onDelete }: { workout: Workout, onDelete: (id: string) => void }) => {
-	const { id, date, workoutType } = workout
+	const { id, date, workoutType, workoutEnded } = workout
 
 	const handleLongPress = () => {
 		Alert.alert(
@@ -18,6 +19,7 @@ const WorkoutCard = ({ workout, onDelete }: { workout: Workout, onDelete: (id: s
 		)
 	}
 
+
 	return (
 		<Link href={`./workouts/${id}`} asChild>
 			<TouchableOpacity
@@ -28,7 +30,7 @@ const WorkoutCard = ({ workout, onDelete }: { workout: Workout, onDelete: (id: s
 				<View className="flex-row items-center gap-x-2 bg-secondary mt-5 rounded-lg">
 					<View className="justify-center items-center rounded-l"
 						style={{
-							width: 120,
+							width: 100,
 							height: 80,
 							backgroundColor: colors.workout[workoutType as keyof typeof colors.workout] || colors.primary
 						}}>
@@ -40,8 +42,17 @@ const WorkoutCard = ({ workout, onDelete }: { workout: Workout, onDelete: (id: s
 							}}>
 							{String(workoutType).charAt(0).toUpperCase() + String(workoutType).slice(1)}</Text>
 					</View>
-					<Text className="text-xl font-bold text-white mt-2" numberOfLines={1}>{date} </Text>
-
+					{workoutEnded ?
+						<View className="flex-col justify-center w-full">
+							<View className="flex-row">
+								<Text className="text-xl font-bold text-white" numberOfLines={1}>{date}</Text>
+								<Text className="text-xl font-bold text-gray-300 ml-5" numberOfLines={1}>dur: {durationHHMMSS(id, workoutEnded)}</Text>
+							</View>
+							<Text className="text-xl text-gray-300 " numberOfLines={1}>{timeHHMM(id)} - {timeHHMM(workoutEnded)}</Text>
+						</View>
+						:
+						<Text className="text-xl font-bold text-white " numberOfLines={1}>{date} </Text>
+					}
 				</View>
 			</TouchableOpacity>
 		</Link>

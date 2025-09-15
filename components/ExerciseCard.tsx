@@ -1,3 +1,4 @@
+import { colors } from '@/assets/colors';
 import { faceIcons } from '@/constants/icons';
 import { Exercise } from '@/interfaces/interfaces';
 import React, { useEffect, useState } from 'react';
@@ -91,7 +92,8 @@ const ExerciseCard = ({ exercise, workoutType, onChange }: { exercise: Exercise;
 							<View className="flex-row justify-end mt-5">
 								<TouchableOpacity
 									onPress={handleAddNewSet}
-									className="bg-blue-500 p-2 rounded-lg items-center w-[25%]"
+									className="p-2 rounded-lg items-center w-[25%]"
+									style={{ backgroundColor: colors.workout[workoutType as keyof typeof colors.workout] || colors.primary }}
 								>
 									<Text className="text-white font-bold text-lg">Add set</Text>
 								</TouchableOpacity>

@@ -14,7 +14,7 @@ const SetCard = ({ exerciseSet, onChange, workoutType, onRemove, isFirst }:
 
 	const [reps, setReps] = useState(exerciseSet.reps);
 	const [weight, setWeight] = useState(exerciseSet.weight);
-	
+
 	useEffect(() => {
 		setReps(exerciseSet.reps);
 		setWeight(exerciseSet.weight);
@@ -41,7 +41,8 @@ const SetCard = ({ exerciseSet, onChange, workoutType, onRemove, isFirst }:
 			) : (
 				<TouchableOpacity
 					onPress={onRemove}
-					className="bg-blue-500 w-[10%] p-2 rounded-lg items-center"
+					className="w-[10%] p-2 rounded-lg items-center"
+					style={{ backgroundColor: colors.workout[workoutType as keyof typeof colors.workout] || colors.primary }}
 				>
 					<Text className="text-white font-bold text-lg">⊖</Text>
 				</TouchableOpacity>

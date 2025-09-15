@@ -1,15 +1,17 @@
 import ExerciseCard from '@/components/ExerciseCard';
 import { Workout } from '@/interfaces/interfaces';
+import { durationHHMMSS } from '@/services/timeConverter';
 import { useDebouncedCallback } from '@/services/useDebouncedCallback';
 import useFetch from '@/services/useFetch';
 import { loadWorkout, saveWorkout } from '@/services/workoutStorage';
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { Stack, useLocalSearchParams, useNavigation } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Text, TouchableOpacity, View } from 'react-native';
 import { colors } from '../../assets/colors';
 
 const WorkoutDetail = () => {
 	const { id } = useLocalSearchParams();
+	const navigation = useNavigation();
 
 	const {
 		data: workoutData,
@@ -19,9 +21,12 @@ const WorkoutDetail = () => {
 	} = useFetch<Workout>(() => (loadWorkout(String(id))));
 
 	const [workout, setWorkout] = useState<Workout | null>(null);
+	const [now, setNow] = useState(Date.now());
 
 	useEffect(() => {
 		if (workoutData) setWorkout(workoutData);
+		const interval = setInterval(() => setNow(Date.now()), 1000);
+		return () => clearInterval(interval);
 	}, [workoutData]);
 
 
@@ -60,6 +65,7 @@ const WorkoutDetail = () => {
 		setWorkout(updatedWorkout);
 
 		await saveWorkout(updatedWorkout);
+		
 	}
 
 	const debouncedSaveWorkout = useDebouncedCallback((updatedWorkout: Workout) => {
@@ -68,12 +74,34 @@ const WorkoutDetail = () => {
 
 	return (
 		<View className="flex-1 bg-primary p-5" >
-
 			<Stack.Screen
 				options={{
 					title: workout?.workoutType || "Workout",
 					headerStyle: { backgroundColor: colors.workout[workout?.workoutType as keyof typeof colors.workout] || colors.primary },
 					headerTintColor: '#ffffff',
+					headerTitleAlign: 'center',
+					headerLeft: () => (
+						<>
+							<TouchableOpacity onPress={async () => {
+								if (workout) {
+									await saveWorkout(workout); 
+								}
+								navigation.goBack();
+							}}>
+								<Text className="text-white text-3xl font-bold mr-16">{"<"}</Text>
+							</TouchableOpacity>
+						</>
+					),
+					headerTitle: () => (
+						<>
+							{!workout?.workoutEnded ?
+								<Text className="text-xl font-bold text-white ml-5"  numberOfLines={1}>
+									dur: {durationHHMMSS(String(id), now.toString())}
+								</Text> : null
+							}
+
+						</>
+					),
 					headerRight: () => (
 						<>
 							{!workout?.workoutEnded ?
@@ -85,7 +113,7 @@ const WorkoutDetail = () => {
 					),
 				}}
 			/>
-			
+
 			<Text className="text-white text-2xl font-bold mt-5">Exercises</Text>
 			<>
 				{workoutLoading ? (
@@ -111,7 +139,7 @@ const WorkoutDetail = () => {
 										const updatedExercises = [...prev.exercises];
 										updatedExercises[index] = updatedExercise;
 										const updatedWorkout = { ...prev, exercises: updatedExercises };
-										debouncedSaveWorkout(updatedWorkout);
+										saveWorkout(updatedWorkout);
 										return updatedWorkout;
 									});
 								}}
@@ -125,9 +153,10 @@ const WorkoutDetail = () => {
 							(workout?.exercises?.length ?? 0) < 15 ? (
 								<TouchableOpacity
 									onPress={handleAddNewExercise}
-									className="bg-blue-500 p-4 rounded-lg items-center mt-5"
+									className="p-4 rounded-lg items-center mt-5"
+									style={{backgroundColor: colors.workout[workout?.workoutType as keyof typeof colors.workout] || colors.primary }}
 								>
-									<Text className="text-white font-bold text-lg">Start New Workout</Text>
+									<Text className="text-white font-bold text-lg">Add Exercise</Text>
 								</TouchableOpacity>
 							) : null
 						}
@@ -139,3 +168,4 @@ const WorkoutDetail = () => {
 };
 
 export default WorkoutDetail;
+
