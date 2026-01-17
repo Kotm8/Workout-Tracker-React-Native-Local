@@ -1,10 +1,12 @@
-import { colors } from '@/assets/colors';
 import { faceIcons } from '@/constants/icons';
+import { Colors } from '@/constants/theme';
 import { Exercise } from '@/interfaces/interfaces';
 import React, { useEffect, useState } from 'react';
-import { FlatList, Image, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { FlatList, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import FaceRadioCard from './FaceRadioCard';
 import SetCard from './SetCard';
+
+const colorScheme = 'light'
 
 const ExerciseCard = ({ exercise, workoutType, onChange }: { exercise: Exercise; workoutType?: string; onChange?: (updatedExercise: Exercise) => void; }) => {
 	const [name, setName] = useState(exercise.name);
@@ -47,21 +49,20 @@ const ExerciseCard = ({ exercise, workoutType, onChange }: { exercise: Exercise;
 		setSets(newSets);
 		onChange?.({ ...exercise, name, sets: newSets });
 	};
-
 	return (
-		<View className='bg-secondary mt-5 rounded-lg p-2 overflow-hidden shadow-lg'>
-			<View className="flex-row items-center">
+		<View style={styles.container} >
+			<View style={styles.topContainer} >
 				<TextInput
 					placeholder="Exercise Name"
 					value={name}
 					onChangeText={setName}
 					onBlur={() => onChange?.({ ...exercise, name, sets })}
-					placeholderTextColor="#ffffff"
-					className='flex-1 ml-2 text-white border-b border-gray-500 pb-1'
+					placeholderTextColor={Colors[colorScheme ?? 'light'].tabIconDefault}
+					style={styles.exerciseName}
 				/>
 				{exercise.previousLevel && exercise.previousLevel > 0 && faceIcons[exercise.previousLevel - 1] ?
 					<>
-						<Text className='ml-2 text-white' >Previous: </Text>
+						<Text style={styles.previousWorkoutText} >Previous: </Text>
 						<Image
 							source={faceIcons[exercise.previousLevel - 1].src}
 							style={{ width: 30, height: 30 }}
@@ -88,14 +89,13 @@ const ExerciseCard = ({ exercise, workoutType, onChange }: { exercise: Exercise;
 				scrollEnabled={false}
 				ListFooterComponent={
 					<View>
-						{(exercise.sets.length ?? 0) < 8 ? (
-							<View className="flex-row justify-end mt-5">
+						{(exercise.sets.length ?? 0) < 15 ? (
+							<View style={styles.setView}>
 								<TouchableOpacity
 									onPress={handleAddNewSet}
-									className="p-2 rounded-lg items-center w-[25%]"
-									style={{ backgroundColor: colors.workout[workoutType as keyof typeof colors.workout] || colors.primary }}
+									style={styles.addSetButton}
 								>
-									<Text className="text-white font-bold text-lg">Add set</Text>
+									<Text style={styles.addSetButtonText}>Add set</Text>
 								</TouchableOpacity>
 							</View>
 						) : null}
@@ -112,5 +112,56 @@ const ExerciseCard = ({ exercise, workoutType, onChange }: { exercise: Exercise;
 		</View>
 	)
 }
+const styles = StyleSheet.create({
+	container: {
+		backgroundColor: Colors[colorScheme ?? 'light'].secondary,
+		marginTop: 10,
+		marginRight: 10,
+		marginLeft: 10,
+		borderRadius: 16,
+		borderWidth: 1,
+		borderColor: Colors[colorScheme ?? 'light'].tint,
+		padding: 4,
+		elevation: 3,
+		//justifyContent: 'center',bg-secondary mt-5 rounded-lg p-2 overflow-hidden shadow-lg
+		//alignItems: 'center',
+	},
+	topContainer: {
+		flexDirection: 'row',
+		alignItems: 'center',
+	},
+	exerciseName: {
+		flex: 1,
+		marginLeft: 8,
+		marginRight: 8,
+		color: Colors[colorScheme ?? 'light'].text,
+		borderBottomWidth: 1,
+		borderBottomColor: Colors[colorScheme ?? 'light'].icon,
+		paddingBottom: 4,
+		fontSize: 20
+	},
+	previousWorkoutText: {
+		color: Colors[colorScheme ?? 'light'].text,
+		fontSize: 20,
+	},
+	setView: {
+		flexDirection: 'row',
+		justifyContent: 'flex-end',
+		marginTop: 20
+	},
+	addSetButton: {
+		padding: 8,
+		borderRadius: 8,
+		alignItems: 'center',
+		width: '25%',
+		backgroundColor: Colors[colorScheme ?? 'light'].tint,
+		elevation: 3,
+	},
+	addSetButtonText: {
+		color: '#ffffff',
+		fontWeight: 'bold',
+		fontSize: 18
+	}
+})
 
 export default ExerciseCard

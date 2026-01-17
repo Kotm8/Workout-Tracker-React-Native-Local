@@ -1,7 +1,9 @@
-import { colors } from '@/assets/colors';
 import { faceIcons } from '@/constants/icons';
+import { Colors } from '@/constants/theme';
 import React, { useEffect, useState } from 'react';
-import { Image, TouchableOpacity, View } from 'react-native';
+import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+
+const colorScheme = 'light'
 
 const FaceRadioCard = ({ exerciseLevel, onChange, workoutType }:
 	{
@@ -21,8 +23,9 @@ const FaceRadioCard = ({ exerciseLevel, onChange, workoutType }:
 		onChange?.(newLevel);
 	};
 
+
 	return (
-		<View className="flex-row mb-2 mt-5 justify-around items-center">
+		<View style={styles.container}>
 			{faceIcons.map((icon) => (
 				<TouchableOpacity key={icon.id} onPress={() => handleLevelChange(icon.id)}>
 					<Image
@@ -30,8 +33,9 @@ const FaceRadioCard = ({ exerciseLevel, onChange, workoutType }:
 						style={{
 							width: 40,
 							height: 40,
-							borderWidth: level === icon.id ? 5 : 0,
-							borderColor: colors.workout[workoutType as keyof typeof colors.workout] || colors.primary,
+							opacity: level === icon.id ? 1 : 0.3,
+							borderColor: Colors[colorScheme ?? 'light'].tint,
+							borderWidth: 2,
 							borderRadius: 20,
 						}}
 					/>
@@ -40,5 +44,13 @@ const FaceRadioCard = ({ exerciseLevel, onChange, workoutType }:
 		</View>
 	)
 }
-
+const styles = StyleSheet.create({
+	container: {
+		flexDirection: 'row',
+		marginBottom: 8,
+		marginTop: 20,
+		justifyContent: 'space-around',
+		alignItems: 'center'
+	}
+})
 export default FaceRadioCard

@@ -7,8 +7,10 @@ export interface Workout {
 	date: string;
 	workoutType: string;
 	exercises: Exercise[];
+	lastExercises?: Exercise[];
 	note?: string;
 	workoutEnded?: string;
+    color: string;
 }
 
 export interface Exercise {
@@ -19,7 +21,7 @@ export interface Exercise {
 } 
 
 export interface ExerciseSet {
-	reps: number;
-	weight: number;
+	reps: string;
+	weight: string;
 }
 

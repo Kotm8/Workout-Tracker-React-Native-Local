@@ -1,41 +1,41 @@
 {
   "expo": {
-    "name": "workoutApp",
+    "name": "Workout Tracker",
     "slug": "workoutApp",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/logo.png",
-    "scheme": "movies",
+    "icon": "./assets/images/biceps-curl.png",
+    "scheme": "workouttracker",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true
     },
     "android": {
-      "bundler": "metro",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/logo.png",
+        "foregroundImage": "./assets/images/biceps-curl.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.anonymous.workoutApp"
+      "package": "com.anonymous.workoutTracker"
     },
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/logo.png"
+      "favicon": "./assets/images/biceps-curl.png"
     },
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/logo.png",
+          "image": "./assets/images/biceps-curl.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
-      ]
+      ],
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true
@@ -43,8 +43,9 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "b34bdc68-928c-4cc0-bcfc-8944c95a3251"
+        "projectId": "babfedb6-ca4e-42d7-8772-21dffd23e4c9"
       }
-    }
+    },
+    "owner": "kotm8"
   }
 }

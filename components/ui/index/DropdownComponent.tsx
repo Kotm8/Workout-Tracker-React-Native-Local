@@ -3,7 +3,6 @@ import { StyleSheet } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 
 interface DropdownItem {
-	label: string;
 	value: string;
 }
 interface DropdownComponentProps {
@@ -24,7 +23,7 @@ const DropdownComponent: React.FC<DropdownComponentProps> = ({ data, placeholder
 			iconStyle={styles.iconStyle}
 			data={data}
 			maxHeight={300}
-			labelField="label"
+			labelField="value"
 			valueField="value"
 			placeholder={placeholderString}
 			value={value}
